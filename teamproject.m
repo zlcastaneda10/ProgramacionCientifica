@@ -22,7 +22,7 @@ function varargout = teamproject(varargin)
 
 % Edit the above text to modify the response to help teamproject
 
-% Last Modified by GUIDE v2.5 05-Apr-2017 08:24:56
+% Last Modified by GUIDE v2.5 05-Apr-2017 08:39:42
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -73,19 +73,19 @@ function varargout = teamproject_OutputFcn(hObject, eventdata, handles)
 varargout{1} = handles.output;
 
 
-% --- Executes on selection change in listbox1.
-function listbox1_Callback(hObject, eventdata, handles)
-% hObject    handle to listbox1 (see GCBO)
+% --- Executes on selection change in listaPacientes.
+function listaPacientes_Callback(hObject, eventdata, handles)
+% hObject    handle to listaPacientes (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: contents = cellstr(get(hObject,'String')) returns listbox1 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from listbox1
+% Hints: contents = cellstr(get(hObject,'String')) returns listaPacientes contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from listaPacientes
 
 
 % --- Executes during object creation, after setting all properties.
-function listbox1_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to listbox1 (see GCBO)
+function listaPacientes_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to listaPacientes (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -94,3 +94,24 @@ function listbox1_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
+
+% --- Executes on button press in plotExams.
+function plotExams_Callback(hObject, eventdata, handles)
+% hObject    handle to plotExams (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on button press in AnalyseMRI.
+function AnalyseMRI_Callback(hObject, eventdata, handles)
+% hObject    handle to AnalyseMRI (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on button press in dischargePatiente.
+function dischargePatiente_Callback(hObject, eventdata, handles)
+% hObject    handle to dischargePatiente (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
