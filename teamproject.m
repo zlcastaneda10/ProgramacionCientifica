@@ -22,7 +22,7 @@ function varargout = teamproject(varargin)
 
 % Edit the above text to modify the response to help teamproject
 
-% Last Modified by GUIDE v2.5 05-Apr-2017 08:39:42
+% Last Modified by GUIDE v2.5 05-Apr-2017 08:49:34
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -113,5 +113,12 @@ function AnalyseMRI_Callback(hObject, eventdata, handles)
 % --- Executes on button press in dischargePatiente.
 function dischargePatiente_Callback(hObject, eventdata, handles)
 % hObject    handle to dischargePatiente (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on button press in add.
+function add_Callback(hObject, eventdata, handles)
+% hObject    handle to add (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
