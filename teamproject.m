@@ -124,3 +124,7 @@ function add_Callback(hObject, eventdata, handles)
 % hObject    handle to add (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+%Se creó una variable temporal que contenga los datos del paciente, es un arreglo de celdas
+pacienteNuevo=(inputdlg({'Name','Gender','Age','Weight (Kg)','Date Of Admitance (DD/MM/YYY)'}))
+
+
