@@ -1,0 +1,6 @@
+Patient ID:	000001
+Name:		Mendez Caro, Elias Brutus
+Gender:		male
+Age:		15 years
+Weight:		63 Kg.
+Admittance:	01/02/2015

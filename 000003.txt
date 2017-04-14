@@ -1,0 +1,6 @@
+Patient ID:	000003
+Name:		Barreto Pineda, Claudia Marina
+Gender:		female
+Age:		35 years
+Weight:		71 Kg.
+Admittance:	01/02/2015

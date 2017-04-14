@@ -64,20 +64,91 @@ guidata(hObject, handles);
 %TODO cargar todos los pacientes de la carpeta
 %Hacer un input para conocer el path
 
-paciente = struct('ID', {'000001'},'nombre',{'Mendez Caro, Elias Brutus'},'genero',{'male'},'edad',{'15 years'},'peso',{'63 Kg.'},'fecha',{'01/02/2015'})
+%Lectura de los datos de los pacientes.
+    %Seleccionamos el archivo donde se encuentra la base de datos
+    folder_name = uigetdir();
+    %intentamos leer un primer archivo para garantizar que estamso en el
+    %lugar correcto
+    fid = fopen(strcat(folder_name,'\','000001.txt'));
+    cont =1;
+    ceros = '00000';
+    lista = ''
+    
 
-set(handles.ID,'String',paciente.ID);
-set(handles.nombre,'String',paciente.ID);
-set(handles.genero,'String',paciente.genero);
-set(handles.edad,'String',paciente.edad);
-set(handles.peso,'String',paciente.peso);
-set(handles.fecha,'String',paciente.fecha);
 
-I = imread('000001.png');
-assignin('base','foto',I); 
+
+    while (fid ~= -1)
+    %while(cont<10)
+        
+        fclose(fid);
+        %Aseguramos que la cantidad de ceros sea correcta
+        if cont>9 && cont <100
+            ceros = '0000'
+        elseif cont >=100
+            ceros = '000'
+        end
+        %creamos la ruta del archivo que se va a leer
+        
+        ruta = strcat(folder_name,'\',ceros,num2str(cont),'.txt');
+      
+            fid = fopen(ruta);
+
+            lineas = strings(6,2);
+            %leemos el archivo
+            for i = 1:6
+               linea = fgetl(fid);
+               linea = sscanf(linea, '%s');
+               linea = strsplit(linea, ':');
+               lineas(i,1) = linea(1);
+               lineas(i,2) = linea(2);
+            end
+            
+            I = imread(strcat(folder_name,'\',ceros,num2str(cont),'.png'));
+            %assignin('base','foto',I); 
+
+
+            %Cambio de String a Char 
+           
+                paciente(cont).PatientID = char(lineas(1,2));
+                paciente(cont).Name = char(lineas(2,2));
+                paciente(cont).Gender = char(lineas(3,2));
+                paciente(cont).Age = char(lineas(4,2));
+                paciente(cont).Weight = char(lineas(5,2));
+                paciente(cont).Admittance = char(lineas(6,2));
+                paciente(cont).Image = I;
+
+           
+            lista = strvcat(lista,paciente(cont).PatientID);
+            
+            fclose(fid);
+       
+        cont =cont+1;
+        
+        if cont>9 && cont <100
+            ceros = '0000'
+        elseif cont >=100
+            ceros = '000'
+        end
+         ruta = strcat(folder_name,'\',ceros,num2str(cont),'.txt');
+         fid = fopen(ruta);
+    end
+
+
+%pacientes = struct('ID', {'000001'},'nombre',{'Mendez Caro, Elias Brutus'},'genero',{'male'},'edad',{'15 years'},'peso',{'63 Kg.'},'fecha',{'01/02/2015'}, 'imagen')
+
+set(handles.ID,'String',paciente(1).PatientID);
+set(handles.nombre,'String',paciente(1).Name);
+set(handles.genero,'String',paciente(1).Gender);
+set(handles.edad,'String',paciente(1).Age);
+set(handles.peso,'String',paciente(1).Weight);
+set(handles.fecha,'String',paciente(1).Admittance);
+assignin('base','foto',paciente(1).Image); 
 axes(handles.ImagenPaciente);
-imshow(I);
-set(handles.listaPacientes, 'String', paciente.ID);
+imshow(paciente(1).Image);
+
+set(handles.listaPacientes, 'String', lista);
+
+
 
 % --- Outputs from this function are returned to the command line.
 function varargout = teamproject_OutputFcn(hObject, eventdata, handles) 
@@ -98,6 +169,23 @@ function listaPacientes_Callback(hObject, eventdata, handles)
 
 % Hints: contents = cellstr(get(hObject,'String')) returns listaPacientes contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from listaPacientes
+s = get(handles.listaPacientes, 'Value');
+
+
+
+%set(handles.ID,'String',handles.paciente(1).PatientID);
+%set(handles.nombre,'String',handles.paciente(1).Name);
+%set(handles.genero,'String',handles.paciente(1).Gender);
+%set(handles.edad,'String',handles.paciente(1).Age);
+%set(handles.peso,'String',handles.paciente(1).Weight);
+%set(handles.fecha,'String',handles.paciente(1).Admittance);
+
+
+%assignin('base','foto',handles.paciente(1).Image); 
+%axes(handles.ImagenPaciente);
+%imshow(handles.paciente(1).Image);
+%set(handles.listaPacientes, 'String', handles.lista);
+
 
 
 % --- Executes during object creation, after setting all properties.
@@ -111,6 +199,7 @@ function listaPacientes_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
 
 
 % --- Executes on button press in plotExams.
