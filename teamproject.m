@@ -77,15 +77,15 @@ guidata(hObject, handles);
 
 
 
-    while (fid ~= -1)
-    %while(cont<10)
+    %while (fid ~= -1)
+    while(cont<10)
         
         fclose(fid);
         %Aseguramos que la cantidad de ceros sea correcta
         if cont>9 && cont <100
-            ceros = '0000'
+            ceros = '0000';
         elseif cont >=100
-            ceros = '000'
+            ceros = '000';
         end
         %creamos la ruta del archivo que se va a leer
         
@@ -148,6 +148,11 @@ imshow(paciente(1).Image);
 
 set(handles.listaPacientes, 'String', lista);
 
+handles.lista=lista
+guidata(hObject,handles)
+
+handles.paciente=paciente
+guidata(hObject,handles)
 
 
 % --- Outputs from this function are returned to the command line.
@@ -173,18 +178,18 @@ s = get(handles.listaPacientes, 'Value');
 
 
 
-%set(handles.ID,'String',handles.paciente(1).PatientID);
-%set(handles.nombre,'String',handles.paciente(1).Name);
-%set(handles.genero,'String',handles.paciente(1).Gender);
-%set(handles.edad,'String',handles.paciente(1).Age);
-%set(handles.peso,'String',handles.paciente(1).Weight);
-%set(handles.fecha,'String',handles.paciente(1).Admittance);
+set(handles.ID,'String',handles.paciente(s).PatientID);
+set(handles.nombre,'String',handles.paciente(s).Name);
+set(handles.genero,'String',handles.paciente(s).Gender);
+set(handles.edad,'String',handles.paciente(s).Age);
+set(handles.peso,'String',handles.paciente(s).Weight);
+set(handles.fecha,'String',handles.paciente(s).Admittance);
 
 
-%assignin('base','foto',handles.paciente(1).Image); 
-%axes(handles.ImagenPaciente);
-%imshow(handles.paciente(1).Image);
-%set(handles.listaPacientes, 'String', handles.lista);
+assignin('base','foto',handles.paciente(s).Image); 
+axes(handles.ImagenPaciente);
+imshow(handles.paciente(s).Image);
+set(handles.listaPacientes, 'String', handles.lista);
 
 
 
