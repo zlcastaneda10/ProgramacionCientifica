@@ -80,7 +80,7 @@ guidata(hObject, handles);
 
 
     %while (fid ~= -1)
-    while(cont<3)
+    while(cont<7)
         
         fclose(fid);
         %Aseguramos que la cantidad de ceros sea correcta
@@ -147,7 +147,7 @@ set(handles.peso,'String',paciente(1).Weight);
 set(handles.fecha,'String',paciente(1).Admittance);
 assignin('base','foto',paciente(1).Image); 
 axes(handles.ImagenPaciente);
-imshow(paciente(1).Image);
+%imshow(paciente(1).Image);
 
 set(handles.listaPacientes, 'String', lista);
 
@@ -195,7 +195,7 @@ set(handles.fecha,'String',handles.paciente(s).Admittance);
 
 assignin('base','foto',handles.paciente(s).Image); 
 axes(handles.ImagenPaciente);
-imshow(handles.paciente(s).Image);
+%imshow(handles.paciente(s).Image);
 set(handles.listaPacientes, 'String', handles.lista);
 
 
@@ -258,8 +258,9 @@ regexprep(exam,',','')
 regexprep(exam,' ','_')
 
 strcat(ruta,'\ACTIVE\EXAMS\',exam,'.txt')
- strcat(ruta,'\ARCHIVE\EXAMS')
-movefile (strcat(ruta,'\ACTIVE\EXAMS\',exam,'.txt'), strcat(ruta,'\ARCHIVE\EXAMS'))
+st= strcat(ruta,'\ARCHIVE\EXAMS')
+whos
+%movefile (strcat(ruta,'\ACTIVE\EXAMS\',exam,'.txt'), strcat(ruta,'\ARCHIVE\EXAMS\'))
 
 
 % --- Executes on button press in add.
