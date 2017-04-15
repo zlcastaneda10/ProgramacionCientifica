@@ -71,6 +71,7 @@ guidata(hObject, handles);
     %intentamos leer un primer archivo para garantizar que estamos en el
     %lugar correcto
     fid = fopen(strcat(folder_name,'\','000001.txt'));
+    
     cont =1;
     ceros = '00000';
     lista = ''
@@ -79,7 +80,7 @@ guidata(hObject, handles);
 
 
     %while (fid ~= -1)
-    while(cont<10)
+    while(cont<3)
         
         fclose(fid);
         %Aseguramos que la cantidad de ceros sea correcta
@@ -97,11 +98,11 @@ guidata(hObject, handles);
             %lineas = strings(6,2);
             %leemos el archivo
             for i = 1:6
-               linea = fgetl(fid);
-               linea = sscanf(linea, '%s');
+              linea = fgetl(fid);
+               %linea = sscanf(linea, '%s');
                linea = strsplit(linea, ':');
                lineas(i,1) = linea(1);
-               lineas(i,2) = linea(2);
+               lineas{i,2} = strtrim(linea{2});
             end
             
             I = imread(strcat(folder_name,'\',ceros,num2str(cont),'.png'));
@@ -111,7 +112,7 @@ guidata(hObject, handles);
             %Cambio de String a Char 
            
                 paciente(cont).PatientID = char(lineas(1,2));
-                paciente(cont).Name = char(lineas(2,2));
+                paciente(cont).Name = lineas(2,2);
                 paciente(cont).Gender = char(lineas(3,2));
                 paciente(cont).Age = char(lineas(4,2));
                 paciente(cont).Weight = char(lineas(5,2));
@@ -132,6 +133,7 @@ guidata(hObject, handles);
         end
          ruta = strcat(folder_name,'\',ceros,num2str(cont),'.txt');
          fid = fopen(ruta);
+        
     end
 
 
@@ -234,10 +236,11 @@ function dischargePatiente_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 %comentario%
-mkdir 'ARCHIVE' 'IDS'
-mkdir 'ARCHIVE' 'EGC'
-mkdir 'ARCHIVE' 'MRI'
-mkdir 'ARCHIVE' 'EXAMS'
+%mkdir 'ARCHIVE' 'IDS'
+%mkdir 'ARCHIVE' 'EGC'
+%mkdir 'ARCHIVE' 'MRI'
+%mkdir 'ARCHIVE' 'EXAMS'
+
 folder_name = uigetdir();
 folder_name
 handles.actual
@@ -251,11 +254,12 @@ x=str2double(handles.paciente(handles.actual).PatientID)
 movefile (strcat(ruta,'\ACTIVE\ECG\',num2str(x),'.bin'), strcat(ruta,'\ARCHIVE\ECG'))
 movefile (strcat(ruta,'\ACTIVE\MRI\',num2str(x),'.pgm'), strcat(ruta,'\ARCHIVE\MRI'))
 exam=handles.paciente(handles.actual).Name
-espacios=findstr(' ',exam)
-comas=findstr(',',exam)
-exam(espacios)=('_')
-exam(comas)=[]
-movefile (strcat(ruta,'\ACTIVE\EXAMS\',exam,'.txt'), strcat(ruta,'ARCHIVE\EXAMS'))
+regexprep(exam,',','')
+regexprep(exam,' ','_')
+
+strcat(ruta,'\ACTIVE\EXAMS\',exam,'.txt')
+ strcat(ruta,'\ARCHIVE\EXAMS')
+movefile (strcat(ruta,'\ACTIVE\EXAMS\',exam,'.txt'), strcat(ruta,'\ARCHIVE\EXAMS'))
 
 
 % --- Executes on button press in add.
