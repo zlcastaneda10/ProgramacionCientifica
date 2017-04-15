@@ -261,6 +261,7 @@ strcat(ruta,'\ACTIVE\EXAMS\',exam,'.txt')
 st= strcat(ruta,'\ARCHIVE\EXAMS')
 whos
 %movefile (strcat(ruta,'\ACTIVE\EXAMS\',exam,'.txt'), strcat(ruta,'\ARCHIVE\EXAMS\'))
+A(hanldes.actual,:)= []
 
 
 % --- Executes on button press in add.
