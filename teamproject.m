@@ -67,7 +67,8 @@ guidata(hObject, handles);
 %Lectura de los datos de los pacientes.
     %Seleccionamos el archivo donde se encuentra la base de datos
     folder_name = uigetdir();
-    %intentamos leer un primer archivo para garantizar que estamso en el
+   
+    %intentamos leer un primer archivo para garantizar que estamos en el
     %lugar correcto
     fid = fopen(strcat(folder_name,'\','000001.txt'));
     cont =1;
@@ -93,7 +94,7 @@ guidata(hObject, handles);
       
             fid = fopen(ruta);
 
-            lineas = strings(6,2);
+            %lineas = strings(6,2);
             %leemos el archivo
             for i = 1:6
                linea = fgetl(fid);
@@ -154,6 +155,9 @@ guidata(hObject,handles)
 handles.paciente=paciente
 guidata(hObject,handles)
 
+handles.actual=1
+guidata(hObject,handles)
+
 
 % --- Outputs from this function are returned to the command line.
 function varargout = teamproject_OutputFcn(hObject, eventdata, handles) 
@@ -175,7 +179,8 @@ function listaPacientes_Callback(hObject, eventdata, handles)
 % Hints: contents = cellstr(get(hObject,'String')) returns listaPacientes contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from listaPacientes
 s = get(handles.listaPacientes, 'Value');
-
+handles.actual=s;
+guidata(hObject,handles)
 
 
 set(handles.ID,'String',handles.paciente(s).PatientID);
@@ -229,6 +234,29 @@ function dischargePatiente_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 %comentario%
+mkdir 'ARCHIVE' 'IDS'
+mkdir 'ARCHIVE' 'EGC'
+mkdir 'ARCHIVE' 'MRI'
+mkdir 'ARCHIVE' 'EXAMS'
+folder_name = uigetdir();
+folder_name
+handles.actual
+ruta=folder_name;
+
+strcat(ruta,'\ACTIVE\IDS\',handles.paciente(handles.actual).PatientID,'.txt')
+movefile (strcat(ruta,'\ACTIVE\IDS\',handles.paciente(handles.actual).PatientID,'.txt'), strcat(ruta,'\ARCHIVE\IDS'))
+
+movefile (strcat(ruta,'\ACTIVE\IDS\',handles.paciente(handles.actual).PatientID,'.png'), strcat(ruta,'\ARCHIVE\IDS'))
+x=str2double(handles.paciente(handles.actual).PatientID)
+movefile (strcat(ruta,'\ACTIVE\ECG\',num2str(x),'.bin'), strcat(ruta,'\ARCHIVE\ECG'))
+movefile (strcat(ruta,'\ACTIVE\MRI\',num2str(x),'.pgm'), strcat(ruta,'\ARCHIVE\MRI'))
+exam=handles.paciente(handles.actual).Name
+espacios=findstr(' ',exam)
+comas=findstr(',',exam)
+exam(espacios)=('_')
+exam(comas)=[]
+movefile (strcat(ruta,'\ACTIVE\EXAMS\',exam,'.txt'), strcat(ruta,'ARCHIVE\EXAMS'))
+
 
 % --- Executes on button press in add.
 function add_Callback(hObject, eventdata, handles)
