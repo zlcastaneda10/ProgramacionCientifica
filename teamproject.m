@@ -184,7 +184,9 @@ function listaPacientes_Callback(hObject, eventdata, handles)
 
 % Hints: contents = cellstr(get(hObject,'String')) returns listaPacientes contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from listaPacientes
+set(handles.listaPacientes, 'String', handles.lista);
 s = get(handles.listaPacientes, 'Value');
+
 handles.actual=s;
 guidata(hObject,handles)
 
@@ -274,13 +276,12 @@ function add_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 %Se creó una variable temporal que contenga los datos del paciente, es un arreglo de celdas
-handles
+
 ruta= handles.rutaIDS;
-ruta
 x=inputdlg({'Name','Gender','Age','Weight (Kg)','Date Of Admittance (DD/MM/YYY)'})
 id=handles.ultimoID
 handles.ultimoID= handles.ultimoID+1
-idn=sprintf('%06d',id)
+idn=sprintf('%06d',id);
 (strcat(ruta,'\',idn,'.txt'))
 fid=fopen((strcat(ruta,'\',idn,'.txt')),'w');
 fprintf(fid,'Patient ID:\t%s\nName:  \t%s\nGender:  \t%s\nAge:  \t%s\nWeight:  \t%s\nAdmittance:  \t%s\n',idn,x{1},x{2},x{3},x{4},x{5});
@@ -289,6 +290,9 @@ fclose (fid);
 [filename,user_canceled] = imgetfile
 %revisar
 I = imread(filename);
+imshow(I)
+%print(I, '-dpng', (strcat(ruta,'\',idn,'.png')));
+imwrite(I,(strcat(ruta,'\',idn,'.png')), 'PNG')
 
 handles.paciente(id).PatientID = idn;
 handles.paciente(id).Name =x{1};
@@ -297,9 +301,10 @@ handles.paciente(id).Age = x{3};
 handles.paciente(id).Weight = x{4};
 handles.paciente(id).Admittance = x{5};
 handles.paciente(id).Image = I;
+handles.lista = strvcat(handles.lista, num2str(idn))
+handles.lista
+set(handles.listaPacientes, 'String', handles.lista);
+guidata(hObject,handles);
 
-%handles.listaPacientes =strvcat(handles.listaPacientes, num2str(idn))
-
-%handles
 
 
