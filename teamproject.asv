@@ -79,8 +79,8 @@ guidata(hObject, handles);
 
 
 
-    while (fid ~= -1)
-    %while(cont<7)
+    %while (fid ~= -1)
+    while(cont<7)
         
         fclose(fid);
         %Aseguramos que la cantidad de ceros sea correcta
@@ -127,9 +127,9 @@ guidata(hObject, handles);
         cont =cont+1;
         
         if cont>9 && cont <100
-            ceros = '0000';
+            ceros = '0000'
         elseif cont >=100
-            ceros = '000';
+            ceros = '000'
         end
          ruta = strcat(folder_name,'\',ceros,num2str(cont),'.txt');
          fid = fopen(ruta);
@@ -281,8 +281,7 @@ x=inputdlg({'Name','Gender','Age','Weight (Kg)','Date Of Admittance (DD/MM/YYY)'
 id=handles.ultimoID
 handles.ultimoID= handles.ultimoID+1
 idn=sprintf('%06d',id)
-(strcat(ruta,'\',idn,'.txt'))
-fid=fopen((strcat(ruta,'\',idn,'.txt')),'w');
+fid=fopen((strcat(ruta,idn,'.txt')),'w');
 fprintf(fid,'Patient ID:\t%s\nName:  \t%s\nGender:  \t%s\nAge:  \t%s\nWeight:  \t%s\nAdmittance:  \t%s\n',idn,x{1},x{2},x{3},x{4},x{5});
 fclose (fid);
 
@@ -298,7 +297,7 @@ handles.paciente(id).Weight = x{4};
 handles.paciente(id).Admittance = x{5};
 handles.paciente(id).Image = I;
 
-%handles.listaPacientes =strvcat(handles.listaPacientes, num2str(idn))
+handles.lista =strvcat(handles.listaPacientes, handles.paciente(id).PatientID)
 
 %handles
 
