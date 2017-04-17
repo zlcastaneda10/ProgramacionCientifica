@@ -227,6 +227,7 @@ function plotExams_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 
+
 % --- Executes on button press in AnalyseMRI.
 function AnalyseMRI_Callback(hObject, eventdata, handles)
 % hObject    handle to AnalyseMRI (see GCBO)
@@ -275,7 +276,7 @@ function add_Callback(hObject, eventdata, handles)
 % hObject    handle to add (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-%Se creó una variable temporal que contenga los datos del paciente, es un arreglo de celdas
+%Se cre?? una variable temporal que contenga los datos del paciente, es un arreglo de celdas
 
 ruta= handles.rutaIDS;
 x=inputdlg({'Name','Gender','Age','Weight (Kg)','Date Of Admittance (DD/MM/YYY)'})

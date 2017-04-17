@@ -1,48 +1,91 @@
-infoPacienteT = [40.1 ;32.5 ;39 ;37.2 ;33.9 ;42.9 ;41.1 ;36.9 ;37.2 ;38.2];
-infoPacientePHigh = [67 ;57 ;50 ;48 ;45 ;64 ;59 ;63 ;66 ;82];
-infoPacientePLow = [106 ;126 ;109 ;112 ;130 ;127 ;103 ;97 ;118 ;117];
-infoPacienteHR = [72 ; 62 ; 60 ; 62 ; 60 ; 52 ; 44 ; 52 ; 45 ; 61];
+%Abrir archivo con los datos de los ex?menes
+fid = fopen('Angel_Barreto_Miguel_Walter.txt');
+%escaneo del archivo txt
+M2 = textscan(fid, '%s', 6, 'Delimiter', '\t','MultipleDelimsAsOne',1);
+contador = 0;
+i = 1;
+%Crear el array de cells con los datos
+while ~isempty(M2{i});
+    i = i + 1;
+    A = textscan(fid, '%s',6, 'Delimiter', '\t','MultipleDelimsAsOne',1);
+    M2{i} = A{1};
+    contador = contador + 1;
+end
+ 
+%Asignar los datos de cada categoria a un arreglo de strings
+Dates = string.empty;
+for i=1:contador-1
+y = M2{i+1}{1};
+Dates(1,i) = y;
+end
+ 
+Temp = strings(1,10);
+for i=1:contador-1
+y = M2{i+1}{3};
+Temp(1,i) = y;
+end
+ 
+Plow = strings(1,10);
+for i=1:contador-1
+y = M2{i+1}{4};
+Plow(1,i) = y;
+end
+ 
+Phigh = strings(1,10);
+for i=1:contador-1
+y = M2{i+1}{5};
+Phigh(1,i) = y;
+end
+ 
+Beats = strings(1,10);
+for i=1:contador-1
+y = M2{i+1}{6};
+Beats(1,i) = y;
+end
+ 
+%Llamar los arreglos de strings con los datos
+Dates
 numeroBra = 0;
 numeroTac = 0;
 
 figure
 subFigure1 = subplot(3,1,1);
-x1 = (1:size(infoPacienteHR));
-for i = 1:size(infoPacienteHR);
-    y1(i) = infoPacienteHR(i);
+x1 = (1:size(Temp));
+for i = 1:size(Temp);
+    y1(i) = Temp(i);
 end
 plot(subFigure1,x1,y1,'y')
 xlabel('Date')
-ylabel('Heart Rate (bpm)')
+ylabel('Temperature (?C)')
 
-subFigure1 = subplot(3,1,2);
-x1 = (1:size(infoPacientePHigh));
-for i = 1:size(infoPacientePHigh);
-    y1(i) = infoPacientePHigh(i);
+subFigure2 = subplot(3,1,2);
+x1 = (1:size(Phigh));
+for i = 1:size(Phigh);
+    y1(i) = Phigh(i);
 end
-for i = 1:size(infoPacientePLow);
-    y2(i) = infoPacientePLow(i);
+for i = 1:size(Plow);
+    y2(i) = Plow(i);
 end
-for i = 1:size(infoPacientePLow);
-    y3(i) = ((infoPacientePLow(i)+infoPacientePHigh(i))/2); 
+for i = 1:size(Plow);
+    y3(i) = ((Plow(i)+Phigh(i))/2); 
 end
-plot(subFigure1,x1,y1,'r',x1,y2,'r',x1,y3,'y')
+plot(subFigure2,x1,y1,'r',x1,y2,'r',x1,y3,'y')
 xlabel('Date')
 ylabel('Pressure (mmHg)')
 
-subFigure1 = subplot(3,1,3);
-x1 = (1:size(infoPacienteHR));
-for i = 1:size(infoPacienteHR);
-    y1(i) = infoPacienteHR(i);
+subFigure3 = subplot(3,1,3);
+x1 = (1:size(Beats));
+for i = 1:size(Beats);
+    y1(i) = Beats(i);
 end
-plot(subFigure1,x1,y1,'y')
+plot(subFigure3,x1,y1,'y')
 xlabel('Date')
 ylabel('Heart Rate (bpm)')
 
-for i = 1:size(infoPacienteHR);
-    if infoPacienteHR(i)<60
+for i = 1:size(Beats);
+    if Beats(i)<60
         numeroBra = numeroBra + 1;
-    elseif infoPacienteHR(i)>100
+    elseif Beats(i)>100
         numeroTac = numeroTac + 1;
     end
 end
