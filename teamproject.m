@@ -124,21 +124,15 @@ while(cont<7)
     
     fclose(fid);
     
-    cont =cont+1;
     
-    if cont>9 && cont <100
-        ceros = '0000';
-    elseif cont >=100
-        ceros = '000';
-    end
-    ruta = strcat(folder_name,'\',ceros,num2str(cont),'.txt');
-    fid = fopen(ruta);
     
-    nombre1 = handles.paciente(cont).Name;
+   
+    
+    nombre1 = paciente(cont).Name;
     nombre1 = strrep(nombre1,' ', '_');
     nombre1 = strrep(nombre1,',', '');
     nombre1
-    archivo =strcat(folder_name,'\',nombre1,'.txt')
+    archivo =strcat('\\CODD.sis.virtual.uniandes.edu.co\Estudiantes\Profiles\zl.castaneda10\Documents\SISTRANS\database\ACTIVE\EXAMS','\',nombre1,'.txt')
     fid = fopen(char(archivo));
     
     
@@ -167,7 +161,7 @@ while(cont<7)
     Temp = '';
     for i=1:contador-1
         y = M2{i+1}{3};
-        Temp = str2num(Temp) + str2num(y);
+        Temp = str2num(Temp) + y;
     end
     tempPromedio1 = Temp/contador-1;
     Plow = '';
@@ -196,7 +190,17 @@ while(cont<7)
     examenes(cont).Phigh = Phigh;
     examenes(cont).Beats = Beats;
     
+    cont =cont+1;
+     if cont>9 && cont <100
+        ceros = '0000';
+    elseif cont >=100
+        ceros = '000';
+    end
+    ruta = strcat(folder_name,'\',ceros,num2str(cont),'.txt');
+    fid = fopen(ruta);
+    
 end
+
 for i = 1:cont
     tempTotal = tempPromedio + examenes(i).Temp ;
 end
