@@ -27,11 +27,11 @@ function varargout = teamproject(varargin)
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
 gui_State = struct('gui_Name',       mfilename, ...
-                   'gui_Singleton',  gui_Singleton, ...
-                   'gui_OpeningFcn', @teamproject_OpeningFcn, ...
-                   'gui_OutputFcn',  @teamproject_OutputFcn, ...
-                   'gui_LayoutFcn',  [] , ...
-                   'gui_Callback',   []);
+    'gui_Singleton',  gui_Singleton, ...
+    'gui_OpeningFcn', @teamproject_OpeningFcn, ...
+    'gui_OutputFcn',  @teamproject_OutputFcn, ...
+    'gui_LayoutFcn',  [] , ...
+    'gui_Callback',   []);
 if nargin && ischar(varargin{1})
     gui_State.gui_Callback = str2func(varargin{1});
 end
@@ -65,77 +65,144 @@ guidata(hObject, handles);
 %Hacer un input para conocer el path
 
 %Lectura de los datos de los pacientes.
-    %Seleccionamos el archivo donde se encuentra la base de datos
-    folder_name = uigetdir();
-   
-    %intentamos leer un primer archivo para garantizar que estamos en el
-    %lugar correcto
-    fid = fopen(strcat(folder_name,'\','000001.txt'));
+%Seleccionamos el archivo donde se encuentra la base de datos
+folder_name = uigetdir();
+
+%intentamos leer un primer archivo para garantizar que estamos en el
+%lugar correcto
+fid = fopen(strcat(folder_name,'\','000001.txt'));
+
+cont =1;
+ceros = '00000';
+lista = ''
+
+
+
+
+%while (fid ~= -1)
+while(cont<7)
     
-    cont =1;
-    ceros = '00000';
-    lista = ''
-    
-
-
-
-    while (fid ~= -1)
-    %while(cont<7)
-        
-        fclose(fid);
-        %Aseguramos que la cantidad de ceros sea correcta
-        if cont>9 && cont <100
-            ceros = '0000';
-        elseif cont >=100
-            ceros = '000';
-        end
-        %creamos la ruta del archivo que se va a leer
-        
-        ruta = strcat(folder_name,'\',ceros,num2str(cont),'.txt');
-      
-            fid = fopen(ruta);
-
-            %lineas = strings(6,2);
-            %leemos el archivo
-            for i = 1:6
-              linea = fgetl(fid);
-               %linea = sscanf(linea, '%s');
-               linea = strsplit(linea, ':');
-               lineas(i,1) = linea(1);
-               lineas{i,2} = strtrim(linea{2});
-            end
-            
-            I = imread(strcat(folder_name,'\',ceros,num2str(cont),'.png'));
-            %assignin('base','foto',I); 
-
-
-            %Cambio de String a Char 
-           
-                paciente(cont).PatientID = char(lineas(1,2));
-                paciente(cont).Name = lineas(2,2);
-                paciente(cont).Gender = char(lineas(3,2));
-                paciente(cont).Age = char(lineas(4,2));
-                paciente(cont).Weight = char(lineas(5,2));
-                paciente(cont).Admittance = char(lineas(6,2));
-                paciente(cont).Image = I;
-
-           
-            lista = strvcat(lista,paciente(cont).PatientID);
-            
-            fclose(fid);
-       
-        cont =cont+1;
-        
-        if cont>9 && cont <100
-            ceros = '0000';
-        elseif cont >=100
-            ceros = '000';
-        end
-         ruta = strcat(folder_name,'\',ceros,num2str(cont),'.txt');
-         fid = fopen(ruta);
-        
+    fclose(fid);
+    %Aseguramos que la cantidad de ceros sea correcta
+    if cont>9 && cont <100
+        ceros = '0000';
+    elseif cont >=100
+        ceros = '000';
     end
-handles.ultimoID=cont; 
+    %creamos la ruta del archivo que se va a leer
+    
+    ruta = strcat(folder_name,'\',ceros,num2str(cont),'.txt');
+    
+    fid = fopen(ruta);
+    
+    %lineas = strings(6,2);
+    %leemos el archivo
+    for i = 1:6
+        linea = fgetl(fid);
+        %linea = sscanf(linea, '%s');
+        linea = strsplit(linea, ':');
+        lineas(i,1) = linea(1);
+        lineas{i,2} = strtrim(linea{2});
+    end
+    
+    I = imread(strcat(folder_name,'\',ceros,num2str(cont),'.png'));
+    %assignin('base','foto',I);
+    
+    
+    %Cambio de String a Char
+    
+    paciente(cont).PatientID = char(lineas(1,2));
+    paciente(cont).Name = lineas(2,2);
+    paciente(cont).Gender = char(lineas(3,2));
+    paciente(cont).Age = char(lineas(4,2));
+    paciente(cont).Weight = char(lineas(5,2));
+    paciente(cont).Admittance = char(lineas(6,2));
+    paciente(cont).Image = I;
+    
+    
+    lista = strvcat(lista,paciente(cont).PatientID);
+    
+    fclose(fid);
+    
+    cont =cont+1;
+    
+    if cont>9 && cont <100
+        ceros = '0000';
+    elseif cont >=100
+        ceros = '000';
+    end
+    ruta = strcat(folder_name,'\',ceros,num2str(cont),'.txt');
+    fid = fopen(ruta);
+    
+    nombre1 = handles.paciente(cont).Name;
+    nombre1 = strrep(nombre1,' ', '_');
+    nombre1 = strrep(nombre1,',', '');
+    nombre1
+    archivo =strcat(folder_name,'\',nombre1,'.txt')
+    fid = fopen(char(archivo));
+    
+    
+    
+    %escaneo del archivo txt
+    M2 = textscan(fid , '%s', 6, 'Delimiter', '\t','MultipleDelimsAsOne',1);
+    contador = 0;
+    i = 1;
+    %Crear el array de cells con los datos
+    while ~isempty(M2{i});
+        i = i + 1;
+        A = textscan(fid, '%s',6, 'Delimiter', '\t','MultipleDelimsAsOne',1);
+        M2{i} = A{1};
+        contador = contador + 1;
+    end
+    
+    
+    %Asignar los datos de cada categoria a un arreglo de strings
+    Dates = '';
+    for i=1:contador-1
+        y = M2{i+1}{1};
+        Dates = strvcat(Dates, y);
+    end
+    
+    
+    Temp = '';
+    for i=1:contador-1
+        y = M2{i+1}{3};
+        Temp = str2num(Temp) + str2num(y);
+    end
+    tempPromedio1 = Temp/contador-1;
+    Plow = '';
+    for i=1:contador-1
+        y = M2{i+1}{4};
+        Plow = strvcat(Plow, y);
+    end
+    
+    Phigh = '';
+    for i=1:contador-1
+        y = M2{i+1}{5};
+        Phigh = strvcat(Phigh, y);
+    end
+    
+    
+    Beats = '';
+    for i=1:contador-1
+        y = M2{i+1}{6};
+        Beats = strvcat(Beats, y);
+    end
+    
+    
+    examenes(cont).Dates = Dates;
+    examenes(cont).Plow = Plow;
+    examenes(cont).Temp = tempPromedio1;
+    examenes(cont).Phigh = Phigh;
+    examenes(cont).Beats = Beats;
+    
+end
+for i = 1:cont
+    tempTotal = tempPromedio + examenes(i).Temp ;
+end
+tempPromedio = tempTotal/cont;
+handles.MeanTemp = tempPromedio;
+handles.ultimoID=cont;
 guidata(hObject,handles);
 
 %pacientes = struct('ID', {'000001'},'nombre',{'Mendez Caro, Elias Brutus'},'genero',{'male'},'edad',{'15 years'},'peso',{'63 Kg.'},'fecha',{'01/02/2015'}, 'imagen')
@@ -145,7 +212,7 @@ set(handles.genero,'String',paciente(1).Gender);
 set(handles.edad,'String',paciente(1).Age);
 set(handles.peso,'String',paciente(1).Weight);
 set(handles.fecha,'String',paciente(1).Admittance);
-assignin('base','foto',paciente(1).Image); 
+assignin('base','foto',paciente(1).Image);
 axes(handles.ImagenPaciente);
 imshow(paciente(1).Image);
 
@@ -166,7 +233,7 @@ guidata(hObject,handles)
 
 
 % --- Outputs from this function are returned to the command line.
-function varargout = teamproject_OutputFcn(hObject, eventdata, handles) 
+function varargout = teamproject_OutputFcn(hObject, eventdata, handles)
 % varargout  cell array for returning output args (see VARARGOUT);
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -199,7 +266,7 @@ set(handles.peso,'String',handles.paciente(s).Weight);
 set(handles.fecha,'String',handles.paciente(s).Admittance);
 
 
-assignin('base','foto',handles.paciente(s).Image); 
+assignin('base','foto',handles.paciente(s).Image);
 axes(handles.ImagenPaciente);
 imshow(handles.paciente(s).Image);
 set(handles.listaPacientes, 'String', handles.lista);
@@ -226,10 +293,13 @@ function plotExams_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 %Abrir archivo con los datos de los ex?menes
-nombre1 = handles.paciente(handles.actual).Nombre;
+
+folder_name = uigetdir();
+nombre1 = handles.paciente(handles.actual).Name;
 nombre1 = strrep(nombre1,' ', '_');
 nombre1 = strrep(nombre1,',', '');
-fid = fopen(nombre1);
+archivo =strcat(folder_name,'\',nombre1,'.txt')
+fid = fopen(char(archivo));
 %escaneo del archivo txt
 M2 = textscan(fid , '%s', 6, 'Delimiter', '\t','MultipleDelimsAsOne',1);
 contador = 0;
@@ -241,80 +311,96 @@ while ~isempty(M2{i});
     M2{i} = A{1};
     contador = contador + 1;
 end
- 
+
 %Asignar los datos de cada categoria a un arreglo de strings
-Dates = strings(1,contador-1);
+Dates = '';
 for i=1:contador-1
-y = M2{i+1}{1};
-Dates(1,i) = y;
+    y = M2{i+1}{1};
+    Dates = strvcat(Dates, y);
 end
- 
-Temp = strings(1,contador-1);
+
+
+Temp = '';
 for i=1:contador-1
-y = M2{i+1}{3};
-Temp(1,i) = y;
+    y = M2{i+1}{3};
+    Temp = strvcat(Temp, y);
 end
- 
-Plow = strings(1,contador-1);
+
+Plow = '';
 for i=1:contador-1
-y = M2{i+1}{4};
-Plow(1,i) = y;
+    y = M2{i+1}{4};
+    Plow = strvcat(Plow, y);
 end
- 
-Phigh = strings(1,contador-1);
+
+Phigh = '';
 for i=1:contador-1
-y = M2{i+1}{5};
-Phigh(1,i) = y;
+    y = M2{i+1}{5};
+    Phigh = strvcat(Phigh, y);
 end
- 
-Beats = strings(1,contador-1);
+
+
+Beats = '';
 for i=1:contador-1
-y = M2{i+1}{6};
-Beats(1,i) = y;
+    y = M2{i+1}{6};
+    Beats = strvcat(Beats, y);
 end
- 
-%Llamar los arreglos de strings con los datos
+
 numeroBra = 0;
 numeroTac = 0;
 
 figure
 subFigure1 = subplot(3,1,1);
-x1 = (1:size(Temp));
-for i = 1:size(Temp);
-    y1(i) = Temp(i);
+sizeTemp =size(Temp);
+x1 = (1:sizeTemp(1));
+y1 = '';
+for i = 1:sizeTemp(1);
+    y1 = strvcat(y1,Temp(i,:));
 end
-plot(subFigure1,x1,y1,'y')
+
+plot(subFigure1,x1,str2num(y1),'y',x1,handles.MeanTemp,'b')
 xlabel('Date')
-ylabel('Temperature (?C)')
+ylabel('Temperature (°C)')
 
 subFigure2 = subplot(3,1,2);
-x1 = (1:size(Phigh));
-for i = 1:size(Phigh);
-    y1(i) = Phigh(i);
+sizePhigh = size(Phigh);
+sizePlow = size(Plow);
+x1 = (1:sizePhigh(1));
+y1 = '';
+for i = 1:sizePhigh(1);
+    y1 = strvcat(y1,Phigh(i,:));
 end
-for i = 1:size(Plow);
-    y2(i) = Plow(i);
+y2 = '';
+for i = 1:sizePlow(1);
+    y2 = strvcat(y2,Plow(i,:));
 end
-for i = 1:size(Plow);
-    y3(i) = ((Plow(i)+Phigh(i))/2); 
+y3 = '';
+for i = 1:sizePlow(1);
+    suma1 = str2num(y1(i,:));
+    suma2 = str2num(y2(i,:));
+    mean = (suma1+suma2)/2;
+    y3 = strvcat(y3,num2str(mean));
 end
-plot(subFigure2,x1,y1,'r',x1,y2,'r',x1,y3,'y')
+plot(subFigure2,x1,str2num(y1),'r',x1,str2num(y2),'r',x1,str2num(y3),'y')
 xlabel('Date')
 ylabel('Pressure (mmHg)')
 
 subFigure3 = subplot(3,1,3);
-x1 = (1:size(Beats));
-for i = 1:size(Beats);
-    y1(i) = Beats(i);
+sizeBeats = size(Beats);
+x1 = (1:sizeBeats(1));
+y1 = '';
+for i = 1:sizeBeats(1);
+    y1 = strvcat(y1,Beats(i,:));
 end
-plot(subFigure3,x1,y1,'y')
+plot(subFigure3,x1,str2num(y1),'y')
 xlabel('Date')
 ylabel('Heart Rate (bpm)')
 
-for i = 1:size(Beats);
-    if Beats(i)<60
+
+
+for i = 1:sizeBeats(1);
+    if str2num(Beats(i,:))<60
         numeroBra = numeroBra + 1;
-    elseif Beats(i)>100
+    elseif str2num(Beats(i,:))>100
         numeroTac = numeroTac + 1;
     end
 end
