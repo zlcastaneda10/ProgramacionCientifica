@@ -67,7 +67,7 @@ guidata(hObject, handles);
 %Lectura de los datos de los pacientes.
 %Seleccionamos el archivo donde se encuentra la base de datos
 folder_name = uigetdir();
-
+folder_name_exams = strrep(folder_name,'IDS','EXAMS');
 %intentamos leer un primer archivo para garantizar que estamos en el
 %lugar correcto
 fid = fopen(strcat(folder_name,'\','000001.txt'));
@@ -131,8 +131,7 @@ while(cont<7)
     nombre1 = paciente(cont).Name;
     nombre1 = strrep(nombre1,' ', '_');
     nombre1 = strrep(nombre1,',', '');
-    nombre1
-    archivo =strcat('\\CODD.sis.virtual.uniandes.edu.co\Estudiantes\Profiles\zl.castaneda10\Documents\SISTRANS\database\ACTIVE\EXAMS','\',nombre1,'.txt')
+    archivo = strcat(folder_name_exams,'\',nombre1,'.txt');
     fid = fopen(char(archivo));
     
     
@@ -363,7 +362,7 @@ end
 
 plot(subFigure1,x1,str2num(y1),'y',x1,handles.MeanTemp,'b')
 xlabel('Date')
-ylabel('Temperature (°C)')
+ylabel('Temperature (?C)')
 
 subFigure2 = subplot(3,1,2);
 sizePhigh = size(Phigh);
