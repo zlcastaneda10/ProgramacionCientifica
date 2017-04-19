@@ -470,6 +470,9 @@ function add_Callback(hObject, eventdata, handles)
 
 ruta= handles.rutaIDS;
 x=inputdlg({'Name','Gender','Age','Weight (Kg)','Date Of Admittance (DD/MM/YYY)'})
+if ~isstring(x{1})||~isstring(x{2})||~isnumeric(x{3})||~isnumeric(x{4})
+k= msgbox('your input mismatch with the needed input, remember name and gender should be strings and the rest should be numerical.','Add Patient','Warning');
+end
 id=handles.ultimoID
 handles.ultimoID= handles.ultimoID+1
 idn=sprintf('%06d',id);
