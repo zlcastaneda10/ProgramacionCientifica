@@ -67,7 +67,7 @@ guidata(hObject, handles);
 %Lectura de los datos de los pacientes.
 %Seleccionamos el archivo donde se encuentra la base de datos
 folder_name = uigetdir();
-folder_name_exams = strrep(folder_name,'IDS','EXAMS');
+
 %intentamos leer un primer archivo para garantizar que estamos en el
 %lugar correcto
 fid = fopen(strcat(folder_name,'\','000001.txt'));
@@ -131,7 +131,8 @@ while(cont<7)
     nombre1 = paciente(cont).Name;
     nombre1 = strrep(nombre1,' ', '_');
     nombre1 = strrep(nombre1,',', '');
-    archivo = strcat(folder_name_exams,'\',nombre1,'.txt');
+    nombre1
+    archivo =strcat('\\CODD.sis.virtual.uniandes.edu.co\Estudiantes\Profiles\zl.castaneda10\Documents\SISTRANS\database\ACTIVE\EXAMS','\',nombre1,'.txt')
     fid = fopen(char(archivo));
     
     
@@ -362,7 +363,7 @@ end
 
 plot(subFigure1,x1,str2num(y1),'y',x1,handles.MeanTemp,'b')
 xlabel('Date')
-ylabel('Temperature (?C)')
+ylabel('Temperature (°C)')
 
 subFigure2 = subplot(3,1,2);
 sizePhigh = size(Phigh);
@@ -470,9 +471,6 @@ function add_Callback(hObject, eventdata, handles)
 
 ruta= handles.rutaIDS;
 x=inputdlg({'Name','Gender','Age','Weight (Kg)','Date Of Admittance (DD/MM/YYY)'})
-if ~isstring(x{1})||~isstring(x{2})||~isnumeric(x{3})||~isnumeric(x{4})
-k= msgbox('your input mismatch with the needed input, remember name and gender should be strings and the rest should be numerical.','Add Patient','Warning');
-end
 id=handles.ultimoID
 handles.ultimoID= handles.ultimoID+1
 idn=sprintf('%06d',id);
