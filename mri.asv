@@ -1,0 +1,23 @@
+I = imread('1.pgm', 'PGM');
+I= im2double(I);
+I = I/255;
+imshow(I) 
+original = I;
+temp = I;
+A= 0.8;
+B= 0.2;
+    imagen(find(temp>=A))=1; imagen(find(temp<=B))=0;
+    imagen(find(imagen~=0 & imagen~=1))= (imagen(find(imagen~=0 & imagen~=1))-B)./A-B;
+    
+    imagencntr = imshow([original,imagen]);
+
+    %I=I.^2
+
+
+%c= find(I>= 0.2)
+
+%I(c) = 0
+
+%c= find(I<= 0.00085)
+%I(c) = 1
+%imshow(I) 

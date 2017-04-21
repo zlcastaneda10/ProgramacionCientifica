@@ -68,19 +68,19 @@ guidata(hObject, handles);
 %Seleccionamos el archivo donde se encuentra la base de datos
 folder_name = uigetdir();
 
+folder_name_exams = strcat(folder_name,'\' ,'ACTIVE','\','EXAMS');
+folder_ids = strcat(folder_name,'\' ,'ACTIVE','\','IDS');
+folder_name_exams
 %intentamos leer un primer archivo para garantizar que estamos en el
 %lugar correcto
-fid = fopen(strcat(folder_name,'\','000001.txt'));
-
+fid = fopen(strcat(folder_ids,'\','000001.txt'));
+fid
 cont =1;
 ceros = '00000';
 lista = ''
 
-
-
-
-%while (fid ~= -1)
-while(cont<7)
+while (fid ~= -1)
+%while(cont<7)
     
     fclose(fid);
     %Aseguramos que la cantidad de ceros sea correcta
@@ -91,7 +91,7 @@ while(cont<7)
     end
     %creamos la ruta del archivo que se va a leer
     
-    ruta = strcat(folder_name,'\',ceros,num2str(cont),'.txt');
+    ruta = strcat(folder_ids,'\',ceros,num2str(cont),'.txt');
     
     fid = fopen(ruta);
     
@@ -105,7 +105,7 @@ while(cont<7)
         lineas{i,2} = strtrim(linea{2});
     end
     
-    I = imread(strcat(folder_name,'\',ceros,num2str(cont),'.png'));
+    I = imread(strcat(folder_ids,'\',ceros,num2str(cont),'.png'));
     %assignin('base','foto',I);
     
     
@@ -119,23 +119,17 @@ while(cont<7)
     paciente(cont).Admittance = char(lineas(6,2));
     paciente(cont).Image = I;
     
-    
     lista = strvcat(lista,paciente(cont).PatientID);
     
     fclose(fid);
-    
-    
-    
-   
-    
+%cerrar archivo del paciente
+%lectura de examenes
     nombre1 = paciente(cont).Name;
     nombre1 = strrep(nombre1,' ', '_');
     nombre1 = strrep(nombre1,',', '');
-    nombre1
-    archivo =strcat('\\CODD.sis.virtual.uniandes.edu.co\Estudiantes\Profiles\zl.castaneda10\Documents\SISTRANS\database\ACTIVE\EXAMS','\',nombre1,'.txt')
+    
+    archivo = strcat(folder_name_exams,'\',nombre1,'.txt');
     fid = fopen(char(archivo));
-    
-    
     
     %escaneo del archivo txt
     M2 = textscan(fid , '%s', 6, 'Delimiter', '\t','MultipleDelimsAsOne',1);
@@ -161,13 +155,15 @@ while(cont<7)
     Temp = '';
     for i=1:contador-1
         y = M2{i+1}{3};
-        Temp = str2num(Temp) + y;
+        Temp = strvcat(Temp, y);
     end
     tempPromedio1 = Temp/contador-1;
+    
+    
     Plow = '';
     for i=1:contador-1
         y = M2{i+1}{4};
-        Plow = strvcat(Plow, y);
+         Plow = strvcat(Plow, y);
     end
     
     Phigh = '';
@@ -180,36 +176,38 @@ while(cont<7)
     Beats = '';
     for i=1:contador-1
         y = M2{i+1}{6};
-        Beats = strvcat(Beats, y);
+          Beats = strvcat(Beats, y);
     end
     
     
-    examenes(cont).Dates = Dates;
+    examenes(cont).Dates = Dates
     examenes(cont).Plow = Plow;
-    examenes(cont).Temp = tempPromedio1;
-    examenes(cont).Phigh = Phigh;
-    examenes(cont).Beats = Beats;
-    
+    examenes(cont).Temp = tempPromedio1
+    examenes(cont).Phigh = Phigh
+    examenes(cont).Beats = Beats
+    fclose(fid);
     cont =cont+1;
      if cont>9 && cont <100
         ceros = '0000';
     elseif cont >=100
         ceros = '000';
     end
-    ruta = strcat(folder_name,'\',ceros,num2str(cont),'.txt');
+    ruta = strcat(folder_ids,'\',ceros,num2str(cont),'.txt');
     fid = fopen(ruta);
+    fid
     
+   
 end
 
-for i = 1:cont
-    tempTotal = tempPromedio + examenes(i).Temp ;
+tempTotal =0
+for i = 1:cont-1
+    tempTotal = tempTotal + str2double(examenes(i).Temp );
 end
 tempPromedio = tempTotal/cont;
 handles.MeanTemp = tempPromedio;
 handles.ultimoID=cont;
 guidata(hObject,handles);
 
-%pacientes = struct('ID', {'000001'},'nombre',{'Mendez Caro, Elias Brutus'},'genero',{'male'},'edad',{'15 years'},'peso',{'63 Kg.'},'fecha',{'01/02/2015'}, 'imagen')
 set(handles.ID,'String',paciente(1).PatientID);
 set(handles.nombre,'String',paciente(1).Name);
 set(handles.genero,'String',paciente(1).Gender);
@@ -222,16 +220,20 @@ imshow(paciente(1).Image);
 
 set(handles.listaPacientes, 'String', lista);
 
+%lista de los pacientes en el listbox  
 handles.lista=lista;
 guidata(hObject,handles);
 
+%estructura de pacientes
 handles.paciente=paciente;
 guidata(hObject,handles);
 
+%variable que almacena el paciente actual 
 handles.actual=1;
 guidata(hObject,handles);
 
-handles.rutaIDS=folder_name;
+%ruta?
+handles.rutaPrincipal=folder_name;
 guidata(hObject,handles)
 
 
@@ -298,11 +300,12 @@ function plotExams_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 %Abrir archivo con los datos de los ex?menes
 
-folder_name = uigetdir();
+folder_name = strcat(handles.rutaPrincipal,'\' ,'ACTIVE','\','EXAMS');
 nombre1 = handles.paciente(handles.actual).Name;
 nombre1 = strrep(nombre1,' ', '_');
 nombre1 = strrep(nombre1,',', '');
-archivo =strcat(folder_name,'\',nombre1,'.txt')
+archivo = strcat(folder_name,'\',nombre1,'.txt')
+
 fid = fopen(char(archivo));
 %escaneo del archivo txt
 M2 = textscan(fid , '%s', 6, 'Delimiter', '\t','MultipleDelimsAsOne',1);
@@ -363,7 +366,7 @@ end
 
 plot(subFigure1,x1,str2num(y1),'y',x1,handles.MeanTemp,'b')
 xlabel('Date')
-ylabel('Temperature (°C)')
+ylabel('Temperature (?C)')
 
 subFigure2 = subplot(3,1,2);
 sizePhigh = size(Phigh);
@@ -434,15 +437,16 @@ function dischargePatiente_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 %comentario%
-%mkdir 'ARCHIVE' 'IDS'
-%mkdir 'ARCHIVE' 'EGC'
-%mkdir 'ARCHIVE' 'MRI'
-%mkdir 'ARCHIVE' 'EXAMS'
 
-folder_name = uigetdir();
-folder_name
-handles.actual
-ruta=folder_name;
+folder_name = strcat(handles.rutaPrincipal,'\' ,'ACTIVE','\','EXAMS');
+folder_archivo = strcat(handles.rutaPrincipal,'\ARCHIVE')
+
+mkdir (folder_archivo, 'IDS')
+mkdir (folder_archivo, 'EGC')
+mkdir (folder_archivo,'MRI')
+mkdir (folder_archivo, 'EXAMS')
+
+ruta=handles.rutaPrincipal;
 
 strcat(ruta,'\ACTIVE\IDS\',handles.paciente(handles.actual).PatientID,'.txt')
 movefile (strcat(ruta,'\ACTIVE\IDS\',handles.paciente(handles.actual).PatientID,'.txt'), strcat(ruta,'\ARCHIVE\IDS'))
@@ -457,9 +461,17 @@ regexprep(exam,' ','_')
 
 strcat(ruta,'\ACTIVE\EXAMS\',exam,'.txt')
 st= strcat(ruta,'\ARCHIVE\EXAMS')
-whos
+
+
+%TODO eliminar pacientes de la lista
+
 %movefile (strcat(ruta,'\ACTIVE\EXAMS\',exam,'.txt'), strcat(ruta,'\ARCHIVE\EXAMS\'))
-A(hanldes.actual,:)= []
+%handles.lista(handles.actual,:)= 'eliminado'
+%handles.actual=1;
+%handles.listaPacientes.value =1
+
+set(handles.listaPacientes, 'String', handles.lista);
+guidata(hObject,handles);
 
 
 % --- Executes on button press in add.
@@ -471,6 +483,9 @@ function add_Callback(hObject, eventdata, handles)
 
 ruta= handles.rutaIDS;
 x=inputdlg({'Name','Gender','Age','Weight (Kg)','Date Of Admittance (DD/MM/YYY)'})
+if ~isstring(x{1})||~isstring(x{2})||~isnumeric(x{3})||~isnumeric(x{4})
+k= msgbox('your input mismatch with the needed input, remember name and gender should be strings and the rest should be numerical.','Add Patient','Warning');
+end
 id=handles.ultimoID
 handles.ultimoID= handles.ultimoID+1
 idn=sprintf('%06d',id);
@@ -497,6 +512,5 @@ handles.lista = strvcat(handles.lista, num2str(idn))
 handles.lista
 set(handles.listaPacientes, 'String', handles.lista);
 guidata(hObject,handles);
-
 
 
