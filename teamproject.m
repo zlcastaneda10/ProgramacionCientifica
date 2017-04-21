@@ -236,7 +236,7 @@ guidata(hObject,handles);
 handles.rutaPrincipal=folder_name;
 guidata(hObject,handles)
 
-handles.examen=examen;
+handles.examenes=examenes;
 guidata(hObject,handles)
 
 
@@ -360,7 +360,9 @@ numeroBra = 0;
 numeroTac = 0;
 
 figure
+
 subFigure1 = subplot(3,1,1);
+
 sizeTemp =size(Temp);
 x1 = (1:sizeTemp(1));
 y1 = '';
@@ -458,6 +460,7 @@ movefile (strcat(ruta,'\ACTIVE\IDS\',handles.paciente(handles.actual).PatientID,
 movefile (strcat(ruta,'\ACTIVE\IDS\',handles.paciente(handles.actual).PatientID,'.png'), strcat(ruta,'\ARCHIVE\IDS'))
 x=str2double(handles.paciente(handles.actual).PatientID)
 movefile (strcat(ruta,'\ACTIVE\ECG\',num2str(x),'.bin'), strcat(ruta,'\ARCHIVE\ECG'))
+%modificar
 movefile (strcat(ruta,'\ACTIVE\MRI\',num2str(x),'.pgm'), strcat(ruta,'\ARCHIVE\MRI'))
 exam=handles.paciente(handles.actual).Name
 regexprep(exam,',','')
@@ -485,36 +488,58 @@ function add_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 %Se cre?? una variable temporal que contenga los datos del paciente, es un arreglo de celdas
 
-ruta= handles.rutaIDS;
+ruta= handles.rutaPrincipal
+ruta = strcat(ruta,'\' ,'ACTIVE','\','IDS');
+
 x=inputdlg({'Name','Gender','Age','Weight (Kg)','Date Of Admittance (DD/MM/YYY)'})
-if ~isstring(x{1})||~isstring(x{2})||~isnumeric(x{3})||~isnumeric(x{4})
-k= msgbox('your input mismatch with the needed input, remember name and gender should be strings and the rest should be numerical.','Add Patient','Warning');
+
+
+ ~isempty(x{3}) 
+ all(ismember(x{3},'0123456789'))
+ 
+ boo= 0
+
+if  isempty(x{1})|| isempty(x{2}) || isempty(x{3}) || isempty(x{4}) || isempty(x{5})
+     k= msgbox('You must fill all the fields','Add Patient','warn');
+     boo=1;
 end
-id=handles.ultimoID
-handles.ultimoID= handles.ultimoID+1
-idn=sprintf('%06d',id);
-(strcat(ruta,'\',idn,'.txt'))
-fid=fopen((strcat(ruta,'\',idn,'.txt')),'w');
-fprintf(fid,'Patient ID:\t%s\nName:  \t%s\nGender:  \t%s\nAge:  \t%s\nWeight:  \t%s\nAdmittance:  \t%s\n',idn,x{1},x{2},x{3},x{4},x{5});
-fclose (fid);
 
-[filename,user_canceled] = imgetfile
-%revisar
-I = imread(filename);
-imshow(I)
-%print(I, '-dpng', (strcat(ruta,'\',idn,'.png')));
-imwrite(I,(strcat(ruta,'\',idn,'.png')), 'PNG')
+if all(ismember(x{1},'0123456789')) || all(ismember(x{2},'0123456789'))
+     k= msgbox('Name should not contain numbers ','Add Patient','warn');
+     boo=1;
+end
+ 
+if ~all(ismember(x{3},'0123456789')) || ~all(ismember(x{4},'0123456789')) || str2double(x{3})<0  || str2double(x{4})<0 
+     k= msgbox('Age and weight must be positive numbers','Add Patient','warn');
+    boo=1;
+end
 
-handles.paciente(id).PatientID = idn;
-handles.paciente(id).Name =x{1};
-handles.paciente(id).Gender = x{2};
-handles.paciente(id).Age = x{3};
-handles.paciente(id).Weight = x{4};
-handles.paciente(id).Admittance = x{5};
-handles.paciente(id).Image = I;
-handles.lista = strvcat(handles.lista, num2str(idn))
-handles.lista
-set(handles.listaPacientes, 'String', handles.lista);
-guidata(hObject,handles);
+if boo==0
+    id=handles.ultimoID
+    handles.ultimoID= handles.ultimoID+1
+    idn=sprintf('%06d',id);
+    (strcat(ruta,'\',idn,'.txt'))
+    fid=fopen((strcat(ruta,'\',idn,'.txt')),'w');
+    fprintf(fid,'Patient ID:\t%s\nName:  \t%s\nGender:  \t%s\nAge:  \t%s\nWeight:  \t%s\nAdmittance:  \t%s\n',idn,x{1},x{2},x{3},x{4},x{5});
+    fclose (fid);
 
+    [filename,user_canceled] = imgetfile
+    %revisar
+    I = imread(filename);
+    imshow(I)
+    %print(I, '-dpng', (strcat(ruta,'\',idn,'.png')));
+    imwrite(I,(strcat(ruta,'\',idn,'.png')), 'PNG')
 
+    handles.paciente(id).PatientID = idn;
+    handles.paciente(id).Name =x{1};
+    handles.paciente(id).Gender = x{2};
+    handles.paciente(id).Age = x{3};
+    handles.paciente(id).Weight = x{4};
+    handles.paciente(id).Admittance = x{5};
+    handles.paciente(id).Image = I;
+    handles.lista = strvcat(handles.lista, num2str(idn))
+    handles.lista
+    set(handles.listaPacientes, 'String', handles.lista);
+    guidata(hObject,handles);
+
+end
