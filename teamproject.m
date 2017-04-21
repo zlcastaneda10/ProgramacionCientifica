@@ -236,6 +236,10 @@ guidata(hObject,handles);
 handles.rutaPrincipal=folder_name;
 guidata(hObject,handles)
 
+handles.examen=examen;
+guidata(hObject,handles)
+
+
 
 
 % --- Outputs from this function are returned to the command line.
