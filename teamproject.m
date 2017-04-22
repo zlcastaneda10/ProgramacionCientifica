@@ -70,6 +70,7 @@ folder_name = uigetdir();
 
 folder_name_exams = strcat(folder_name,'\' ,'ACTIVE','\','EXAMS');
 folder_ids = strcat(folder_name,'\' ,'ACTIVE','\','IDS');
+<<<<<<< Updated upstream
 folder_name_exams
 %intentamos leer un primer archivo para garantizar que estamos en el
 %lugar correcto
@@ -78,6 +79,14 @@ fid
 cont =1;
 ceros = '00000';
 lista = ''
+=======
+%intentamos leer un primer archivo para garantizar que estamos en el
+%lugar correcto
+fid = fopen(strcat(folder_ids,'\','000001.txt'));
+cont =1;
+ceros = '00000';
+lista = '';
+>>>>>>> Stashed changes
 
 while (fid ~= -1)
 %while(cont<7)
@@ -157,34 +166,49 @@ while (fid ~= -1)
         y = M2{i+1}{3};
         Temp = strvcat(Temp, y);
     end
+<<<<<<< Updated upstream
     tempPromedio1 = Temp/contador-1;
     
+=======
+    tempPromedio1 = sum(str2num(Temp))/(contador-1);
+>>>>>>> Stashed changes
     
     Plow = '';
     for i=1:contador-1
         y = M2{i+1}{4};
          Plow = strvcat(Plow, y);
     end
+    Plow = sum(str2num(Plow))/(contador-1);
     
     Phigh = '';
     for i=1:contador-1
         y = M2{i+1}{5};
         Phigh = strvcat(Phigh, y);
     end
+    Phigh = sum(str2num(Phigh))/(contador-1);
     
+    Ppromedio = (Plow+Phigh)/2;
     
     Beats = '';
     for i=1:contador-1
         y = M2{i+1}{6};
           Beats = strvcat(Beats, y);
     end
+    Beats = sum(str2num(Beats))/(contador-1);
     
     
     examenes(cont).Dates = Dates
     examenes(cont).Plow = Plow;
+<<<<<<< Updated upstream
     examenes(cont).Temp = tempPromedio1
     examenes(cont).Phigh = Phigh
     examenes(cont).Beats = Beats
+=======
+    examenes(cont).Temp = tempPromedio1;
+    examenes(cont).Phigh = Phigh;
+    examenes(cont).Pmean = Ppromedio;
+    examenes(cont).Beats = Beats;
+>>>>>>> Stashed changes
     fclose(fid);
     cont =cont+1;
      if cont>9 && cont <100
@@ -199,12 +223,33 @@ while (fid ~= -1)
    
 end
 
+<<<<<<< Updated upstream
 tempTotal =0
 for i = 1:cont-1
     tempTotal = tempTotal + str2double(examenes(i).Temp );
+=======
+tempTotal = 0;
+for i = 1:cont-1
+    tempTotal = tempTotal + examenes(i).Temp;
+>>>>>>> Stashed changes
 end
 tempPromedio = tempTotal/cont;
 handles.MeanTemp = tempPromedio;
+
+pTotal = 0;
+for i = 1:cont-1
+    pTotal = pTotal + examenes(i).Pmean;
+end
+pPromedio1 = pTotal/cont;
+handles.MeanP = pPromedio1;
+
+beatsTotal = 0;
+for i = 1:cont-1
+    beatsTotal = beatsTotal + examenes(i).Beats;
+end
+beatsPromedio = beatsTotal/cont;
+handles.MeanBeats = beatsPromedio;
+
 handles.ultimoID=cont;
 guidata(hObject,handles);
 
@@ -232,12 +277,34 @@ guidata(hObject,handles);
 handles.actual=1;
 guidata(hObject,handles);
 
+<<<<<<< Updated upstream
 %ruta?
+=======
+%ruta
+>>>>>>> Stashed changes
 handles.rutaPrincipal=folder_name;
 guidata(hObject,handles)
 
 handles.examenes=examenes;
 guidata(hObject,handles)
+
+folder_name = strcat(handles.rutaPrincipal,'\' ,'ACTIVE','\','ECG');
+nombre1 = strrep(handles.paciente(handles.actual).PatientID, '0','')
+archivo = strcat(folder_name,'\',nombre1,'.bin');
+b = fopen(char(archivo));
+c = fread(b,'single');
+pks = findpeaks(c);
+pks = pks( pks>=0 );
+num = size(pks)/(250/60);
+if num(1)>100
+    set(handles.lblRiesgo, 'String', 'EGC ALERT');
+elseif num(1)<60
+    set(handles.lblRiesgo, 'String', 'EGC ALERT');
+else
+    set(handles.lblRiesgo, 'String', 'Normal EGC');
+end
+
+
 
 
 
@@ -275,6 +342,21 @@ set(handles.edad,'String',handles.paciente(s).Age);
 set(handles.peso,'String',handles.paciente(s).Weight);
 set(handles.fecha,'String',handles.paciente(s).Admittance);
 
+folder_name = strcat(handles.rutaPrincipal,'\' ,'ACTIVE','\','ECG');
+nombre1 = strrep(handles.paciente(handles.actual).PatientID, '0','');
+archivo = strcat(folder_name,'\',nombre1,'.bin');
+b = fopen(char(archivo));
+c = fread(b,'single');
+pks = findpeaks(c);
+pks = pks( pks>=0 );
+num = size(pks)/(250/60);
+if num(1)>100
+    set(handles.lblRiesgo, 'String', 'ECG ALERT');
+elseif num(1)<60
+    set(handles.lblRiesgo, 'String', 'ECG ALERT');
+else
+    set(handles.lblRiesgo, 'String', 'Normal EGC');
+end
 
 assignin('base','foto',handles.paciente(s).Image);
 axes(handles.ImagenPaciente);
@@ -308,7 +390,11 @@ folder_name = strcat(handles.rutaPrincipal,'\' ,'ACTIVE','\','EXAMS');
 nombre1 = handles.paciente(handles.actual).Name;
 nombre1 = strrep(nombre1,' ', '_');
 nombre1 = strrep(nombre1,',', '');
+<<<<<<< Updated upstream
 archivo = strcat(folder_name,'\',nombre1,'.txt')
+=======
+archivo = strcat(folder_name,'\',nombre1,'.txt');
+>>>>>>> Stashed changes
 
 fid = fopen(char(archivo));
 %escaneo del archivo txt
@@ -369,8 +455,8 @@ y1 = '';
 for i = 1:sizeTemp(1);
     y1 = strvcat(y1,Temp(i,:));
 end
-
-plot(subFigure1,x1,str2num(y1),'y',x1,handles.MeanTemp,'b')
+a(1,1:size(str2num(y1))) = handles.MeanTemp;
+plot(subFigure1,x1,str2num(y1),'b',x1, a,'g')
 xlabel('Date')
 ylabel('Temperature (?C)')
 
@@ -393,7 +479,8 @@ for i = 1:sizePlow(1);
     mean = (suma1+suma2)/2;
     y3 = strvcat(y3,num2str(mean));
 end
-plot(subFigure2,x1,str2num(y1),'r',x1,str2num(y2),'r',x1,str2num(y3),'y')
+b(1,1:sizePlow(1)) = handles.MeanP;
+plot(subFigure2,x1,str2num(y1),'r',x1,str2num(y2),'r',x1,str2num(y3),'b', x1, b, 'g')
 xlabel('Date')
 ylabel('Pressure (mmHg)')
 
@@ -404,7 +491,8 @@ y1 = '';
 for i = 1:sizeBeats(1);
     y1 = strvcat(y1,Beats(i,:));
 end
-plot(subFigure3,x1,str2num(y1),'y')
+c(1,1:size(str2num(y1))) = handles.MeanBeats;
+plot(subFigure3,x1,str2num(y1),'b', x1, c, 'g')
 xlabel('Date')
 ylabel('Heart Rate (bpm)')
 
@@ -498,12 +586,21 @@ x=inputdlg({'Name','Gender','Age','Weight (Kg)','Date Of Admittance (DD/MM/YYY)'
  all(ismember(x{3},'0123456789'))
  
  boo= 0
+<<<<<<< Updated upstream
 
 if  isempty(x{1})|| isempty(x{2}) || isempty(x{3}) || isempty(x{4}) || isempty(x{5})
      k= msgbox('You must fill all the fields','Add Patient','warn');
      boo=1;
 end
 
+=======
+
+if  isempty(x{1})|| isempty(x{2}) || isempty(x{3}) || isempty(x{4}) || isempty(x{5})
+     k= msgbox('You must fill all the fields','Add Patient','warn');
+     boo=1;
+end
+
+>>>>>>> Stashed changes
 if all(ismember(x{1},'0123456789')) || all(ismember(x{2},'0123456789'))
      k= msgbox('Name should not contain numbers ','Add Patient','warn');
      boo=1;
@@ -541,5 +638,9 @@ if boo==0
     handles.lista
     set(handles.listaPacientes, 'String', handles.lista);
     guidata(hObject,handles);
+<<<<<<< Updated upstream
 
+=======
+    
+>>>>>>> Stashed changes
 end
